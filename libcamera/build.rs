@@ -75,7 +75,7 @@ fn main() {
 
     for file in ["controls.rs", "properties.rs"] {
         match std::fs::metadata(out_path.join(file)) {
-            Ok(m) => eprintln!("{:?}: {:?}", out_path.join(file), m),
+            Ok(_) => std::fs::remove_file(out_path.join(file)).unwrap(),
             Err(e) => eprintln!("File hasn't been copied yet?: {:?}, {}", out_path.join(file), e),
         }
         std::fs::copy(selected_version.join(file), out_path.join(file)).unwrap();
