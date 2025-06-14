@@ -74,7 +74,7 @@ fn main() {
     let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
 
     for file in ["controls.rs", "properties.rs"] {
-        std::fs::copy(selected_version.join(file), out_path.join(file)).unwrap();
+        std::fs::copy(selected_version.join(file), out_path.join(file)).inspect_err(|e| eprintln!("failed to copy file: {e}")).unwrap();
         print!(
             "cargo:rerun-if-changed={}",
             selected_version.join(file).to_string_lossy()
