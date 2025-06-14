@@ -74,7 +74,11 @@ fn main() {
     let out_path = PathBuf::from(env::var("OUT_DIR").unwrap());
 
     for file in ["controls.rs", "properties.rs"] {
-        std::fs::copy(selected_version.join(file), out_path.join(file)).inspect_err(|e| eprintln!("failed to copy file: {e}")).unwrap();
+        match std::fs::metadata(out_path.join(file)) {
+            Ok(m) => eprintln!("{:?}: {:?}", out_path.join(file), m),
+            Err(e) => eprintln!("File hasn't been copied yet?: {:?}, {}", out_path.join(file), e),
+        }
+        std::fs::copy(selected_version.join(file), out_path.join(file)).unwrap();
         print!(
             "cargo:rerun-if-changed={}",
             selected_version.join(file).to_string_lossy()
